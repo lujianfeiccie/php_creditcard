@@ -25,7 +25,7 @@ class dbex{
 			$this->rowCount=$data_count['total_count'];
 			$sql.=" limit ".($this->currPage-1)*$this->perPage.",".$this->perPage;
 		}
- 	 $result=mysql_query($sql) or die('<script type="text/javascript">location.href="servtools/error.php?error_type=dberr";</script>');
+     $result=mysql_query($sql) or die('<script type="text/javascript">location.href="servtools/error.php?error_type=dberr";</script>');
 
    if($this->perPage){
 		$total_rs=$this->rowCount;
@@ -40,7 +40,7 @@ class dbex{
  	   	  exit;
  	   }
 	 }
-		while($rsRow=mysql_fetch_array($result)){
+		while($rsRow=mysql_fetch_assoc($result)){
 			$rs[]=$rsRow;
 		}
 		$this->rowCount=mysql_num_rows($result);
@@ -54,7 +54,6 @@ class dbex{
    public function getRow($sql)
    {
    	 $result=mysql_query($sql) or die('<script type="text/javascript">location.href="servtools/error.php?error_type=dberr";</script>');
-
      return mysql_fetch_array($result);
    }
    public function exeUpdate($sql)

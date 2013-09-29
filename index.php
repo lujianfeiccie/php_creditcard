@@ -1,5 +1,6 @@
 <?php
 header("Content-Type: text/html;charset=utf-8");
+//header('Content-type: text/json');
 require("iweb_mini_lib/conf/dbconf.php"); //$tablePreStr,$dbServs
 require("iweb_mini_lib/cdbex.class.php"); //dbex
 require("iweb_mini_lib/fdbtarget.php");   //dbtarget
@@ -12,64 +13,34 @@ require("configuration.php");
  $count = short_check(get_args("count"));//单条页数
 
  $page = short_check(get_args("page")); //页码
+ 
+ $good_typeid = short_check(get_args("good_typeid")); //银行
+ 
+ if($good_typeid==null){
+ 	$json_data = array("data"=>"","status" => "0","info"=>"good_typeid should not be null");
+ 	echo json_encode($json_data);
+ 	return;
+ }
  //实例化核心数据库操作类
  $dbo = new dbex();
  //连接数据库
  dbtarget('r',$dbServs);
  //查询语句
- $sql = "";
+ $sql = " select good_name,good_integral,good_no from $t_good where good_typeid = $good_typeid ";
  if($count!=null){
  	if($page==null){
- 		$sql = "select * from $t_good limit $count";
+ 		$sql = $sql." limit $count ";
  		//echo $sql;
  	}else{
  		$min = (int)($page-1)*(int)$count;//设定起始页
- 		$sql = "select * from $t_good limit $min, $count";
+ 		$sql = $sql." limit $min, $count";
  		//echo $sql;
  	}
- }else{
- 	$sql = "select * from $t_good";
- 	//echo $sql;
  }
  //得到数据集
  $t_good_list = $dbo->getRs($sql);
-
- if($dbo->rowCount==0){ //没有数据时
- 	echo"{";
- 		echo"\"data\":\"\", \"status\": \"1\"";
- 	echo"}";
- 	return;
- }
- if($dbo->rowCount==1){ //只有一条数据时
- 	echo"{";
- 	echo"\"data\": [";
- 	echo"{";
- 	echo"\"good_name\": \"".$t_good_list[0]["good_name"]."\",";
- 	echo"\"good_integral\":\"".$t_good_list[0]["good_integral"]."\",";
- 	echo"\"good_no\":\"".$t_good_list[0]["good_no"]."\",";
- 	echo"\"good_imgurl\":\"".$t_good_list[0]["good_imgurl"]."\"";
- 	echo"}";
- 	echo "],";
- 	echo "\"status\": \"1\"";
- 	echo"}";
- 	return;
- }
-      
- echo"{";                 //多条数据时
- echo"\"data\": [";
- for($i=0;$i<$dbo->rowCount;$i++){
- 	$rs = $t_good_list[$i];
- 		echo"{";
- 			echo"\"good_name\": \"".$rs["good_name"]."\",";
- 			echo"\"good_integral\":\"".$rs["good_integral"]."\",";
- 			echo"\"good_no\":\"".$rs["good_no"]."\",";
- 			echo"\"good_imgurl\":\"".$rs["good_imgurl"]."\"";
- 		echo"}";
- 		if($i<$dbo->rowCount-1){
- 			echo",";
- 		}
- }
- echo "],";
- echo "\"status\": \"1\"";
- echo"}";
+ //组装json
+$json_data = array("data" =>$t_good_list,"status" => "1","info"=>"success");
+ //输出json   
+ echo json_encode($json_data);
 ?>
