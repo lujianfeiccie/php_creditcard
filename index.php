@@ -1,6 +1,6 @@
 <?php
-header("Content-Type: text/html;charset=utf-8");
-//header('Content-type: text/json');
+//header("Content-Type: text/html;charset=utf-8");
+header("Content-type: text/json;charset=utf-8");
 require("iweb_mini_lib/conf/dbconf.php"); //$tablePreStr,$dbServs
 require("iweb_mini_lib/cdbex.class.php"); //dbex
 require("iweb_mini_lib/fdbtarget.php");   //dbtarget
