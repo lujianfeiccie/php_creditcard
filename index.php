@@ -26,7 +26,7 @@ require("configuration.php");
  //连接数据库
  dbtarget('r',$dbServs);
  //查询语句
- $sql = " select good_name,good_integral,good_no from $t_good where good_typeid = $good_typeid ";
+ $sql = " select good_name,good_integral,good_no,good_imgurl from $t_good where good_typeid = $good_typeid ";
  if($count!=null){
  	if($page==null){
  		$sql = $sql." limit $count ";
