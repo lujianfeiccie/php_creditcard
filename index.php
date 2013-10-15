@@ -32,7 +32,7 @@ require("configuration.php");
  //连接数据库
  dbtarget('r',$dbServs);
  //查询语句
- $sql = " select good_name,good_integral,good_no,good_imgurl from $t_good where good_typeid = $good_typeid ";
+ $sql = " select good_name,good_integral,good_no,good_imgurl,good_cash from $t_good where good_typeid = $good_typeid ";
  
  //加入积分范围查询
  if($low_integral!=null && $high_integral!=null){
