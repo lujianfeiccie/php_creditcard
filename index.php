@@ -16,6 +16,12 @@ require("configuration.php");
  
  $good_typeid = short_check(get_args("good_typeid")); //银行
  
+ $low_integral = short_check(get_args("low_integral")); //最低积分
+ 
+ $high_integral = short_check(get_args("high_integral")); //最高积分
+ 
+ $good_name = trim(get_args("good_name")); //商品名称
+ 
  if($good_typeid==null){
  	$json_data = array("data"=>"","status" => "0","info"=>"good_typeid should not be null");
  	echo json_encode($json_data);
@@ -27,6 +33,15 @@ require("configuration.php");
  dbtarget('r',$dbServs);
  //查询语句
  $sql = " select good_name,good_integral,good_no,good_imgurl from $t_good where good_typeid = $good_typeid ";
+ 
+ //加入积分范围查询
+ if($low_integral!=null && $high_integral!=null){
+ 	$sql = $sql." and good_integral between $low_integral and $high_integral ";
+ } 
+ //加入了商品名称的查询
+ if($good_name!=null){
+ 	$sql = $sql. " and good_name like '%$good_name%' ";
+ }
  if($count!=null){
  	if($page==null){
  		$sql = $sql." limit $count ";
@@ -37,6 +52,7 @@ require("configuration.php");
  		//echo $sql;
  	}
  }
+
  //得到数据集
  $t_good_list = $dbo->getRs($sql);
  //组装json
